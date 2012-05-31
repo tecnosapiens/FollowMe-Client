@@ -12,12 +12,11 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 
-public class FollowMeActivity extends Activity implements LocationListener
+public class LocationTest extends Activity implements LocationListener
 {
 	private LocationManager mgr;
 	private TextView output;
 	private String best;
-	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -140,4 +139,3 @@ public class FollowMeActivity extends Activity implements LocationListener
 	}
 
 }
-
