@@ -45,7 +45,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 	{
 		super.onResume();
 		// Start updates (doc recommends delay >= 60000 ms)
-		mgr.requestLocationUpdates(best, 15000, 1, this);
+		mgr.requestLocationUpdates(best, 10, 1, this);
 	}
 	
 	@Override
