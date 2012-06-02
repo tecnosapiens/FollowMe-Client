@@ -11,6 +11,15 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.telephony.SmsManager ;
+import android.content.BroadcastReceiver;
+import android.widget.Toast;
+
+// Tutorial: http://mobiforge.com/developing/story/sms-messaging-android
 
 public class FollowMeActivity extends Activity implements LocationListener
 {
@@ -18,6 +27,9 @@ public class FollowMeActivity extends Activity implements LocationListener
 	private TextView output;
 	private String best;
 	
+	private String phone;
+	private String message;
+	private boolean semaforo;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -38,6 +50,8 @@ public class FollowMeActivity extends Activity implements LocationListener
 		log("\nLocations (starting with last known):" );
 		Location location = mgr.getLastKnownLocation(best);
 		dumpLocation(location);
+		
+		
 	}
 	
 	@Override
@@ -134,10 +148,111 @@ public class FollowMeActivity extends Activity implements LocationListener
 	private void dumpLocation(Location location)
 	{
 		if (location == null)
+		{
 			log("\nLocation[unknown]" );
+		}
 		else
+		{
 			log("\n" + location.toString());
+			
+			phone = "2292423424";
+			message = "ROCA esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
+			//semaforo = true;
+			
+			//if(semaforo == true)
+			//{
+				sendSMS(phone, message);
+				semaforo = false;
+			//}
+		}
 	}
+	
+	//---sends an SMS message to another device---
+    private void sendSMS(String phoneNumber, String msg)
+    {        
+    	// make sure the fields are not empty
+        if (phoneNumber.length()>0 && msg.length()>0)
+        {
+        	// call the sms manager
+            PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, FollowMeActivity.class), 0);
+                SmsManager sms = SmsManager.getDefault();
+                // this is the function that does all the magic
+                sms.sendTextMessage(phoneNumber, null, msg, pi, null);
+                
+                log("\nMensaje Enviado a[ " + phone + " ]" );
+        }
+        else
+        {
+        	// display message if text fields are empty
+            //Toast.makeText(getBaseContext(),"All field are required",Toast.LENGTH_SHORT).show();
+        	log("\nPor alguna razon tu mensaje no se envio");
+        }       
+    }    
 
-}
+    //---sends an SMS message to another device---
+    private void sendSMSMonitor(String phoneNumber, String message)
+    {        
+        String SENT = "SMS_SENT";
+        String DELIVERED = "SMS_DELIVERED";
+ 
+        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
+            new Intent(SENT), 0);
+ 
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
+            new Intent(DELIVERED), 0);
+ 
+        //---when the SMS has been sent---
+        registerReceiver(new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS sent", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(getBaseContext(), "Generic failure", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(getBaseContext(), "No service", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(getBaseContext(), "Null PDU", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(getBaseContext(), "Radio off", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter(SENT));
+ 
+        //---when the SMS has been delivered---
+        registerReceiver(new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS delivered", 
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getBaseContext(), "SMS not delivered", 
+                                Toast.LENGTH_SHORT).show();
+                        break;                        
+                }
+            }
+        }, new IntentFilter(DELIVERED));        
+ 
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);        
+    }
+    
+}//Fin de Clase
 
