@@ -161,8 +161,8 @@ public class FollowMeActivity extends Activity implements LocationListener
 			
 			//if(semaforo == true)
 			//{
-				sendSMS(phone, message);
-				semaforo = false;
+				//sendSMS(phone, message);
+				//semaforo = false;
 			//}
 		}
 	}
@@ -184,7 +184,7 @@ public class FollowMeActivity extends Activity implements LocationListener
         else
         {
         	// display message if text fields are empty
-            //Toast.makeText(getBaseContext(),"All field are required",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(),"All field are required",Toast.LENGTH_SHORT).show();
         	log("\nPor alguna razon tu mensaje no se envio");
         }       
     }    
