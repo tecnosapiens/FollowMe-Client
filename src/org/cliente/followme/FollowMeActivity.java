@@ -95,6 +95,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 	private static final String[] A = { "invalid" , "n/a" , "fine" , "coarse" };
 	private static final String[] P = { "invalid" , "n/a" , "low" , "medium" ,	"high" };
 	private static final String[] S = { "out of service" ,"temporarily unavailable" , "available" };
+	private static final int FORMAT_DEGREES = 0;
 	
 	/** Write a string to the output window */
 	private void log(String string)
@@ -155,16 +156,39 @@ public class FollowMeActivity extends Activity implements LocationListener
 		{
 			log("\n" + location.toString());
 			
-			phone = "2292423424";
-			message = "ROCA esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
-			//semaforo = true;
+			/** send Message Geographics Position from Client**/
+			phone = "5556"; //2292423424";
+			message = "\nROCA: " + location.toString();// esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
+			message = createPosGeoMSN(location).toString();
+			sendSMSMonitor(phone, message);
 			
-			//if(semaforo == true)
-			//{
-				//sendSMS(phone, message);
-				//semaforo = false;
-			//}
 		}
+	}
+	
+	/** Create a Position Geographic Message from Client**/
+	private StringBuilder createPosGeoMSN(Location location)
+	{
+		String time = Long.toString(location.getTime());
+		String latitude = Double.toString(location.getLatitude());
+		String longitude = Double.toString(location.getLongitude());
+		String provider = location.getProvider();
+		
+		
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("$+id,")
+		.append(",")
+		.append(time)
+		.append(",")
+		.append(latitude)
+		.append(",")
+		.append(longitude)
+		.append(",")
+		.append(provider);
+		//builder.append("LocationProvider[" )
+		
+		
+		return builder;
 	}
 	
 	//---sends an SMS message to another device---
