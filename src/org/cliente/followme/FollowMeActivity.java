@@ -59,7 +59,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 	{
 		super.onResume();
 		// Start updates (doc recommends delay >= 60000 ms)
-		mgr.requestLocationUpdates(best, 10, 1, this);
+		mgr.requestLocationUpdates(best, 60000, 1, this);
 	}
 	
 	@Override
@@ -277,6 +277,8 @@ public class FollowMeActivity extends Activity implements LocationListener
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);        
     }
+    
+   
     
 }//Fin de Clase
 
