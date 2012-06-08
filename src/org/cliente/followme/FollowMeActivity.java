@@ -59,7 +59,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 	{
 		super.onResume();
 		// Start updates (doc recommends delay >= 60000 ms)
-		mgr.requestLocationUpdates(best, 60000, 1, this);
+		mgr.requestLocationUpdates(best, 1000, 1, this);
 	}
 	
 	@Override
@@ -157,7 +157,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 			log("\n" + location.toString());
 			
 			/** send Message Geographics Position from Client**/
-			phone = "5556"; //2292423424";
+			phone = "5554"; //2292423424";
 			message = "\nROCA: " + location.toString();// esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
 			message = createPosGeoMSN(location).toString();
 			sendSMSMonitor(phone, message);
