@@ -27,7 +27,7 @@ import android.widget.Toast;
 public class FollowMeActivity extends Activity implements LocationListener
 {
 	private LocationManager mgr;
-	private TextView output;
+	private static TextView output;
 	private String best;
 	
 	private String phone;
@@ -97,7 +97,8 @@ public class FollowMeActivity extends Activity implements LocationListener
 	private static final String[] P = { "invalid" , "n/a" , "low" , "medium" ,	"high" };
 	private static final String[] S = { "out of service" ,"temporarily unavailable" , "available" };
 	/** Write a string to the output window */
-	private void log(String string)
+	
+	public static void log(String string)
 	{
 		output.append(string + "\n" );
 	}
