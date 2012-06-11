@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver 
 {
+	
 	 @Override
 	    public void onReceive(Context context, Intent intent) 
 	    {
@@ -31,7 +32,12 @@ public class SmsReceiver extends BroadcastReceiver
 	            }
 	            //---display the new SMS message---
 	            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+	            
+	            //Here put code to execute fuction in FollowMeActivity
+	            	            
 	           
+	            FollowMeActivity.log(str);
+	                                 
 	           
 	        }                         
 		 
