@@ -9,6 +9,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import android.app.PendingIntent;
@@ -29,8 +32,6 @@ public class FollowMeActivity extends Activity implements LocationListener
 	
 	private String phone;
 	private String message;
-	private boolean semaforo;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -59,7 +60,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 	{
 		super.onResume();
 		// Start updates (doc recommends delay >= 60000 ms)
-		mgr.requestLocationUpdates(best, 60000, 1, this);
+		mgr.requestLocationUpdates(best, 10000, 1, this);
 	}
 	
 	@Override
@@ -95,8 +96,6 @@ public class FollowMeActivity extends Activity implements LocationListener
 	private static final String[] A = { "invalid" , "n/a" , "fine" , "coarse" };
 	private static final String[] P = { "invalid" , "n/a" , "low" , "medium" ,	"high" };
 	private static final String[] S = { "out of service" ,"temporarily unavailable" , "available" };
-	private static final int FORMAT_DEGREES = 0;
-	
 	/** Write a string to the output window */
 	private void log(String string)
 	{
@@ -157,7 +156,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 			log("\n" + location.toString());
 			
 			/** send Message Geographics Position from Client**/
-			phone = "5556"; //2292423424";
+			phone = "5554"; //2292423424";
 			message = "\nROCA: " + location.toString();// esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
 			message = createPosGeoMSN(location).toString();
 			sendSMSMonitor(phone, message);
@@ -279,6 +278,32 @@ public class FollowMeActivity extends Activity implements LocationListener
     }
     
    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
     
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_principal, menu);
+    return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) 
+	    {
+		    case R.id.MenuMensajes:
+		    //lblMensaje.setText("Opcion 1 pulsada!");
+		    	//Toast.makeText(getBaseContext(), "Menu de Mensajes pulsada",Toast.LENGTH_SHORT).show();
+		    	startActivity(new Intent(this, Pref_MensajesPosicion.class));
+		    return true;
+		    case R.id.MenuServidores:
+		    //lblMensaje.setText("Opcion 2 pulsada!");;
+		    return true;
+		    case R.id.MenuServicios:
+		    //lblMensaje.setText("Opcion 3 pulsada!");;
+		    return true;
+		    default:
+		    return super.onOptionsItemSelected(item);
+	    }
+    }
 }//Fin de Clase
 

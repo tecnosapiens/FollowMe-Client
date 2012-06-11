@@ -3,5 +3,10 @@
 
     <string name="hello">FollowMe-Client ROCA en Geolocalizacion</string>
     <string name="app_name">FollowMe</string>
+    <string name="mensaje_sin_panico">Envio Mensaje Sin Panico</string>
+    <string name="mensaje_con_panico">Envio Mensaje en Panico</string>
+    <string name="resumen_mensaje_sin_panico">Desea enviar Mensajes de Posicion periodico sin panico</string>
+    <string name="resumen_mensaje_con_panico">Elija el tiempo para envio Mensajes de Posicion con panico </string>
+    <string name="configuracion_envio_mensajes">Configuracion de Envio de Mensajes de Posicion</string>
 
 </resources>
