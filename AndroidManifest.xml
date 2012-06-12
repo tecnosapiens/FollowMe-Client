@@ -29,6 +29,8 @@
             </intent-filter> 
         </receiver>
          <activity android:name=".Pref_MensajesPosicion" android:label="@string/configuracion_envio_mensajes"></activity>
+         <activity android:name=".Pref_ServidoresPosicion" android:label="@string/configuracion_envio_mensajes"></activity>
+         <activity android:name=".MensajesSinPanico" />
     </application>
 
 </manifest>

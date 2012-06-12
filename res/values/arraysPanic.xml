@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+	 
+	    <string-array name="updateIntervalPanic">
+	        <item name="10">Cada 10 seg</item>
+	        <item name="15">Cada 15 seg</item>
+	        <item name="30">Cada 30 seg</item>
+	        <item name="45">Cada 45 seg</item>
+	        <item name="60">Cada 1 min</item>
+	        <item name="120">Cada 2 min</item>
+	        <item name="180">Cada 3 min</item>
+	    </string-array>
+	     
+	    <string-array name="updateIntervalValuesPanic">
+	        <item name="10">10</item>
+	        <item name="15">15</item>
+	        <item name="30">30</item>
+	        <item name="45">45</item>
+	        <item name="60">1</item>
+	        <item name="120">2</item>
+	        <item name="180">3</item>
+	    </string-array>
+	 
+</resources>

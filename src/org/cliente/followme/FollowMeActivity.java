@@ -297,7 +297,7 @@ public class FollowMeActivity extends Activity implements LocationListener
 		    	startActivity(new Intent(this, Pref_MensajesPosicion.class));
 		    return true;
 		    case R.id.MenuServidores:
-		    //lblMensaje.setText("Opcion 2 pulsada!");;
+		    	startActivity(new Intent(this, Pref_ServidoresPosicion.class));
 		    return true;
 		    case R.id.MenuServicios:
 		    //lblMensaje.setText("Opcion 3 pulsada!");;

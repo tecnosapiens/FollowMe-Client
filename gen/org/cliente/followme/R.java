@@ -8,6 +8,12 @@
 package org.cliente.followme;
 
 public final class R {
+    public static final class array {
+        public static final int updateInterval=0x7f050000;
+        public static final int updateIntervalPanic=0x7f050002;
+        public static final int updateIntervalValues=0x7f050001;
+        public static final int updateIntervalValuesPanic=0x7f050003;
+    }
     public static final class attr {
     }
     public static final class drawable {
@@ -18,27 +24,40 @@ public final class R {
         public static final int ic_menu_globe=0x7f020004;
     }
     public static final class id {
-        public static final int MenuMensajes=0x7f070001;
-        public static final int MenuServicios=0x7f070003;
-        public static final int MenuServidores=0x7f070002;
-        public static final int output=0x7f070000;
+        public static final int MenuMensajes=0x7f080002;
+        public static final int MenuServicios=0x7f080004;
+        public static final int MenuServidores=0x7f080003;
+        public static final int output=0x7f080001;
+        public static final int settings_text_view=0x7f080000;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int intervalos=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class menu {
-        public static final int menu_principal=0x7f060000;
+        public static final int menu_principal=0x7f070000;
     }
     public static final class string {
-        public static final int app_name=0x7f050001;
-        public static final int configuracion_envio_mensajes=0x7f050006;
-        public static final int hello=0x7f050000;
-        public static final int mensaje_con_panico=0x7f050003;
-        public static final int mensaje_sin_panico=0x7f050002;
-        public static final int resumen_mensaje_con_panico=0x7f050005;
-        public static final int resumen_mensaje_sin_panico=0x7f050004;
+        public static final int app_name=0x7f060001;
+        /**      Variables de Menu 
+  Menu de Configuracion de Mensajes de Posicion 
+         */
+        public static final int configuracion_envio_mensajes=0x7f060002;
+        /**  Menu de Configuracion de Mensajes de registro de Servidores de Posicion 
+         */
+        public static final int configuracion_registro_servidores=0x7f060007;
+        public static final int hello=0x7f060000;
+        public static final int mensaje_con_panico=0x7f060005;
+        public static final int mensaje_sin_panico=0x7f060003;
+        public static final int registro_id_dispositivo=0x7f06000a;
+        public static final int registro_servidor=0x7f060008;
+        public static final int resumen_mensaje_con_panico=0x7f060006;
+        public static final int resumen_mensaje_sin_panico=0x7f060004;
+        public static final int resumen_registro_id_dispositivo=0x7f06000b;
+        public static final int resumen_registro_servidor=0x7f060009;
     }
     public static final class xml {
         public static final int settings=0x7f040000;
+        public static final int settings2=0x7f040001;
     }
 }
