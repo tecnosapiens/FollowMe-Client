@@ -1,7 +1,12 @@
 package org.cliente.followme;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+
+
+import android.R.bool;
 import android.app.Activity;
 import android.location.Criteria;
 import android.location.Location;
@@ -9,16 +14,23 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.telephony.SmsManager ;
+import android.text.method.ScrollingMovementMethod;
 import android.content.BroadcastReceiver;
 import android.widget.Toast;
 
@@ -28,30 +40,93 @@ public class FollowMeActivity extends Activity implements LocationListener
 {
 	private LocationManager mgr;
 	private static TextView output;
+	private static Button btnPanico;
 	private String best;
 	
-	private String phone;
+	private String[] servidores;
 	private String message;
+	
+	private int tiempoEnvioMensajePanico;
+	private int tiempoEnvioMensajeNoPanico;
+	private boolean IsenviarMensajeNoPanico;
+	private int distanciaActualizacionPosicion;
+	
+	
+	private boolean IsBtnPanicoPulsado;
+	
+	//Obtenemos la hora actual
+	Calendar calendario;
+
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		IsBtnPanicoPulsado = false;
+		//Obtenemos la hora actual
+		calendario = new GregorianCalendar();
+		
+			
+		//se leen las preferencias del usuario
+		SharedPreferences sharedPrefs =	PreferenceManager.getDefaultSharedPreferences(FollowMeActivity.this);
+		
+		tiempoEnvioMensajePanico = Integer.parseInt(sharedPrefs.getString("tiempo_envio_mensajes_panico", "10000"));
+		tiempoEnvioMensajeNoPanico = Integer.parseInt(sharedPrefs.getString("tiempo_envio_mensaje_sin_panico", "300000"));
+	  	IsenviarMensajeNoPanico = sharedPrefs.getBoolean("enviar_mensajes_sin_panico", false);
+	  	distanciaActualizacionPosicion = 100;
+	  	
+	  	servidores = new String[3];
+	  	servidores[0] = new String(sharedPrefs.getString("servidor1", "-1"));
+	  	
+    	
+	  	  
+//	  	 Log.i("Preferencias", "\n tiempoEnvioMensajePanico (sistema): " + Integer.toString(tiempoEnvioMensajePanico) );
+//		 Log.i("Preferencias", "\n tiempoEnvioMensajeNoPanico (sistema): " + Integer.toString(tiempoEnvioMensajeNoPanico) );
+//		 Log.i("Preferencias", "\n enviarMensajeNoPanico (sistema): " + Boolean.toString(IsenviarMensajeNoPanico) );
+//		 Log.i("Preferencias", "\n servidor1 (sistema): " + servidores[0]);
+			
 	
-		mgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 		output = (TextView) findViewById(R.id.output);
+		output.setMovementMethod(new ScrollingMovementMethod());
 		
-		log("Location providers:" );
-		dumpProviders();
-	
-		Criteria criteria = new Criteria();
-		best = mgr.getBestProvider(criteria, true);
-		log("\nBest provider is: " + best);
-	
-		log("\nLocations (starting with last known):" );
-		Location location = mgr.getLastKnownLocation(best);
-		dumpLocation(location);
 		
+		
+		
+		btnPanico = (ToggleButton) findViewById(R.id.BtnPanico);
+		
+		
+
+		btnPanico.setOnClickListener(new View.OnClickListener()
+		{
+
+			public void onClick(View v)
+			{
+				//Hacer rutina de gestion de posicion geografica por boton panico activado
+				if (((ToggleButton) btnPanico).isChecked()) 
+				{
+					IsBtnPanicoPulsado = true;
+					btnPanicoActivado();
+					btnPanico.setBackgroundColor(getResources().getColor(R.color.panicColor));
+
+				} else
+				{
+					IsBtnPanicoPulsado = false;
+					btnPanicoDesactivado();
+					btnPanico.setBackgroundColor(getResources().getColor(R.color.relaxColor));
+
+
+				}
+
+
+			}
+		});
+		
+		if(IsenviarMensajeNoPanico)
+		{
+			envioMensajesPoscionNOPanico();
+		}
 		
 	}
 	
@@ -59,8 +134,42 @@ public class FollowMeActivity extends Activity implements LocationListener
 	protected void onResume()
 	{
 		super.onResume();
+		
+		//se leen las preferencias del usuario
+		SharedPreferences sharedPrefs =	PreferenceManager.getDefaultSharedPreferences(FollowMeActivity.this);
+		
+		tiempoEnvioMensajePanico = Integer.parseInt(sharedPrefs.getString("tiempo_envio_mensajes_panico", "10000"));
+		tiempoEnvioMensajeNoPanico = Integer.parseInt(sharedPrefs.getString("tiempo_envio_mensaje_sin_panico", "300000"));
+	  	IsenviarMensajeNoPanico = sharedPrefs.getBoolean("enviar_mensajes_sin_panico", false);
+	  	distanciaActualizacionPosicion = 100;
+	  	
+	  	servidores = new String[3];
+	  	servidores[0] = new String(sharedPrefs.getString("servidor1", "-1"));
+	  	
+		
 		// Start updates (doc recommends delay >= 60000 ms)
-		mgr.requestLocationUpdates(best, 10000, 1, this);
+		if(IsenviarMensajeNoPanico)
+		{
+			mgr.requestLocationUpdates(best, tiempoEnvioMensajeNoPanico, distanciaActualizacionPosicion, this);
+		}
+		
+		
+		
+//		//Recuperacion de las preferencias de usuarios para envio de mensajes de posicion
+//		// En panico = Usuario a activado la alarma de SOS
+//		// No panico = la aplicacion puede enviar mensaje de posicion periodicamente. El tiempo de envio dependera 
+//		// de las preferencias de envio proporcionadas por el usuario
+//		
+//		SharedPreferences sharedPrefs =	PreferenceManager.getDefaultSharedPreferences(FollowMeActivity.this);
+//	  	  
+//    	StringBuilder builder = new StringBuilder();
+//	  	 
+//	  	  builder.append("\n enviar_mensajes_sin_panico (usuario): " + sharedPrefs.getBoolean("enviar_mensajes_sin_panico", false));
+//	  	  builder.append("\n tiempo_envio_mensaje_sin_panico (usuario): " + sharedPrefs.getString("tiempo_envio_mensaje_sin_panico", "600000"));
+//	  	  builder.append("\n tiempo_envio_mensajes_panico (usuario): " + sharedPrefs.getString("tiempo_envio_mensajes_panico", "60000"));
+//	  	  builder.append("\n servidor1 (usuario): " + sharedPrefs.getString("servidor1", "-1"));
+//	  	  
+//	  	 Log.i("Preferencias", builder.toString() );   	
 	}
 	
 	@Override
@@ -68,9 +177,22 @@ public class FollowMeActivity extends Activity implements LocationListener
 	{
 		super.onPause();
 		// Stop updates to save power while app paused
-		mgr.removeUpdates(this);
+		if(!IsBtnPanicoPulsado)
+		{
+			mgr.removeUpdates(this);
+		}
 	}
 	
+	//******************************************************************
+	//		FUNCIONES DE ADMINISTRACION DE POSICION GEOGRAFICA
+	//
+	//******************************************************************
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	 */
 	public void onLocationChanged(Location location)
 	{
 		dumpLocation(location);
@@ -91,6 +213,33 @@ public class FollowMeActivity extends Activity implements LocationListener
 		log("\nProvider status changed: " + provider + ", status="+ S[status] + ", extras=" + extras);
 		
 	}
+	
+	/** Describe the given location, which might be null */
+	private void dumpLocation(Location location)
+	{
+		if (location == null)
+		{
+			log("\nLocation[unknown]" );
+		}
+		else
+		{
+			log("\n" + location.toString());
+			
+			/** send Message Geographics Position from Client**/
+			//phone = "5554"; //2292423424";
+			message = "\nROCA: " + location.toString();// esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
+			message = createPosGeoMSN(location).toString();
+			sendSMSMonitor(servidores[0], message);
+			
+		}
+	}
+	
+	
+	//******************************************************************
+	//		FUNCIONES DE ADMINISTRACION IMPRESION DATOS EN GUI
+	//
+	//******************************************************************
+		
 	
 	// Define human readable names
 	private static final String[] A = { "invalid" , "n/a" , "fine" , "coarse" };
@@ -145,30 +294,21 @@ public class FollowMeActivity extends Activity implements LocationListener
 		log(builder.toString());
 	}
 	
-	/** Describe the given location, which might be null */
-	private void dumpLocation(Location location)
-	{
-		if (location == null)
-		{
-			log("\nLocation[unknown]" );
-		}
-		else
-		{
-			log("\n" + location.toString());
-			
-			/** send Message Geographics Position from Client**/
-			phone = "5554"; //2292423424";
-			message = "\nROCA: " + location.toString();// esta a punto de terminar programa de localizacion de personas. Esto es una prueba";
-			message = createPosGeoMSN(location).toString();
-			sendSMSMonitor(phone, message);
-			
-		}
-	}
+	//******************************************************************
+	//		FUNCIONES DE ADMINISTRACION DE ENVIO MENSAJES POSICION
+	//
+	//******************************************************************
+
 	
 	/** Create a Position Geographic Message from Client**/
 	private StringBuilder createPosGeoMSN(Location location)
 	{
+		
+		String hora = calendario.getTime().toLocaleString();
 		String time = Long.toString(location.getTime());
+		
+		Log.i("tiempoMensajes", hora + " -----> " + time);
+		
 		String latitude = Double.toString(location.getLatitude());
 		String longitude = Double.toString(location.getLongitude());
 		String provider = location.getProvider();
@@ -203,7 +343,7 @@ public class FollowMeActivity extends Activity implements LocationListener
                 // this is the function that does all the magic
                 sms.sendTextMessage(phoneNumber, null, msg, pi, null);
                 
-                log("\nMensaje Enviado a[ " + phone + " ]" );
+                log("\nMensaje Enviado a[ " + servidores[0] + " ]" );
         }
         else
         {
@@ -278,7 +418,11 @@ public class FollowMeActivity extends Activity implements LocationListener
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);        
     }
     
-   
+  //******************************************************************
+  	//		FUNCIONES DE ADMINISTRACION DE MENUS DE CONFIGURACION DE USUARIO
+  	//
+  	//******************************************************************
+  		
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     
@@ -306,5 +450,83 @@ public class FollowMeActivity extends Activity implements LocationListener
 		    return super.onOptionsItemSelected(item);
 	    }
     }
+    
+    
+    //******************************************************************
+    //		FUNCIONES DE ADMINISTRACION DE CONTROLES EN GUI
+    //
+    //******************************************************************
+
+    
+    private void btnPanicoActivado()
+    {
+    	if(IsenviarMensajeNoPanico)
+    	{
+    		mgr.removeUpdates(this);
+    	}
+    	mgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
+    	log("Location providers:" );
+    	dumpProviders();
+
+    	Criteria criteria = new Criteria();
+    	best = mgr.getBestProvider(criteria, true);
+    	log("\nBest provider is: " + best);
+
+    	mgr.requestLocationUpdates(best, tiempoEnvioMensajePanico, distanciaActualizacionPosicion, this);
+
+    	log("\nLocations (starting with last known):" );
+    	Location location = mgr.getLastKnownLocation(best);
+    	dumpLocation(location);
+
+    }
+    
+    private void envioMensajesPoscionNOPanico()
+    {
+    	mgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+    	log("Location providers:" );
+    	dumpProviders();
+
+    	Criteria criteria = new Criteria();
+    	best = mgr.getBestProvider(criteria, true);
+    	log("\nBest provider is: " + best);
+
+    	mgr.requestLocationUpdates(best, tiempoEnvioMensajeNoPanico, distanciaActualizacionPosicion, this);
+
+    	log("\nLocations (starting with last known):" );
+    	Location location = mgr.getLastKnownLocation(best);
+    	dumpLocation(location);
+    }
+    
+    
+    private void btnPanicoDesactivado()
+    {
+    	mgr.removeUpdates(this);
+    	
+    	if(IsenviarMensajeNoPanico)
+    	{
+    		mgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
+        	log("Location providers:" );
+        	dumpProviders();
+
+        	Criteria criteria = new Criteria();
+        	best = mgr.getBestProvider(criteria, true);
+        	log("\nBest provider is: " + best);
+
+        	mgr.requestLocationUpdates(best, tiempoEnvioMensajeNoPanico, distanciaActualizacionPosicion, this);
+
+        	log("\nLocations (starting with last known):" );
+        	Location location = mgr.getLastKnownLocation(best);
+        	dumpLocation(location);
+    	}
+    	
+    	
+
+    }
+    
 }//Fin de Clase
 

@@ -23,5 +23,10 @@
       
     <string name="registro_id_dispositivo">Registrar ID Dispositivo</string>
     <string name="resumen_registro_id_dispositivo">Ingrese ID Dispositivo (actualmente es su numero telefonico) </string>
+    <string name="num_servidor_uno">-1</string>
+    <string name="num_servidor_dos">-1</string>
+    <string name="num_servidor_tres">-1</string>
+    <string name="tituloBtnPanico">S.O.S</string>
+    
     
 </resources>

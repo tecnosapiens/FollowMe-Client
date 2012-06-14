@@ -9,6 +9,6 @@ public class Pref_MensajesPosicion extends PreferenceActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.settings);
+		addPreferencesFromResource(R.xml.prefmensajes);
 	}
 }//fin de clase
