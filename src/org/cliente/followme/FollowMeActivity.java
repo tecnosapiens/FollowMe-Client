@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.telephony.SmsManager ;
+import android.text.format.Time;
 import android.text.method.ScrollingMovementMethod;
 import android.content.BroadcastReceiver;
 import android.widget.Toast;
@@ -306,6 +307,16 @@ public class FollowMeActivity extends Activity implements LocationListener
 		
 		String hora = calendario.getTime().toLocaleString();
 		String time = Long.toString(location.getTime());
+		String tipoMensaje =  "";
+		
+		if(IsBtnPanicoPulsado)
+		{
+			tipoMensaje = "SOS";
+		}
+		else
+		{
+			tipoMensaje = "OK";
+		}
 		
 		Log.i("tiempoMensajes", hora + " -----> " + time);
 		
@@ -314,11 +325,17 @@ public class FollowMeActivity extends Activity implements LocationListener
 		String provider = location.getProvider();
 		
 		
-		
+		Time now = new Time();
+    	now.setToNow();
+    	
 		StringBuilder builder = new StringBuilder();
-		builder.append("$+id,")
+		builder.append("$+id")
 		.append(",")
-		.append(time)
+		.append(tipoMensaje)
+		.append(",")
+		.append(now.format("%H%M%S"))
+		.append(",")
+		.append(now.format("%d%m%Y"))
 		.append(",")
 		.append(latitude)
 		.append(",")
