@@ -109,13 +109,15 @@ public class FollowMeActivity extends Activity implements LocationListener
 				{
 					IsBtnPanicoPulsado = true;
 					btnPanicoActivado();
-					btnPanico.setBackgroundColor(getResources().getColor(R.color.panicColor));
+					//btnPanico.setBackgroundColor(getResources().getColor(R.color.panicColor));
+					btnPanico.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_button_stop));
 
 				} else
 				{
 					IsBtnPanicoPulsado = false;
 					btnPanicoDesactivado();
-					btnPanico.setBackgroundColor(getResources().getColor(R.color.relaxColor));
+					//btnPanico.setBackgroundColor(getResources().getColor(R.color.relaxColor));
+					btnPanico.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_button_go));
 
 
 				}

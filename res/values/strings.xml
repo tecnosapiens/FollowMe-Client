@@ -27,6 +27,7 @@
     <string name="num_servidor_dos">-1</string>
     <string name="num_servidor_tres">-1</string>
     <string name="tituloBtnPanico">S.O.S</string>
+    <string name="label_killApli">Parar Aplicacion</string>
     
     
 </resources>

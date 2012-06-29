@@ -21,17 +21,20 @@ public final class R {
         public static final int relaxColor=0x7f060001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ic_menu_database=0x7f020001;
-        public static final int ic_menu_dialog=0x7f020002;
-        public static final int ic_menu_exit=0x7f020003;
-        public static final int ic_menu_globe=0x7f020004;
+        public static final int ic_button_go=0x7f020000;
+        public static final int ic_button_stop=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int ic_menu_database=0x7f020003;
+        public static final int ic_menu_dialog=0x7f020004;
+        public static final int ic_menu_exit=0x7f020005;
+        public static final int ic_menu_globe=0x7f020006;
     }
     public static final class id {
+        public static final int BtnKillApli=0x7f090002;
         public static final int BtnPanico=0x7f090000;
-        public static final int MenuMensajes=0x7f090002;
-        public static final int MenuServicios=0x7f090004;
-        public static final int MenuServidores=0x7f090003;
+        public static final int MenuMensajes=0x7f090003;
+        public static final int MenuServicios=0x7f090005;
+        public static final int MenuServidores=0x7f090004;
         public static final int output=0x7f090001;
     }
     public static final class layout {
@@ -50,6 +53,7 @@ public final class R {
          */
         public static final int configuracion_registro_servidores=0x7f070007;
         public static final int hello=0x7f070000;
+        public static final int label_killApli=0x7f070010;
         public static final int mensaje_con_panico=0x7f070005;
         public static final int mensaje_sin_panico=0x7f070003;
         public static final int num_servidor_dos=0x7f07000d;
